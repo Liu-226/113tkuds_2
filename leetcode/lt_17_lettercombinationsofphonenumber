@@ -1,0 +1,53 @@
+// 題目：Letter Combinations of a Phone Number
+// 給定一個僅包含數字 2-9 的字串 digits，
+// 回傳所有可能的字母組合。
+// 若輸入為空字串，則回傳空陣列。
+
+import java.util.*;
+
+class Solution {
+    private static final Map<Character, String> phoneMap = new HashMap<>() {{
+        put('2', "abc");
+        put('3', "def");
+        put('4', "ghi");
+        put('5', "jkl");
+        put('6', "mno");
+        put('7', "pqrs");
+        put('8', "tuv");
+        put('9', "wxyz");
+    }};
+
+    public List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<>();
+        if (digits == null || digits.length() == 0) return result;
+
+        backtrack(result, new StringBuilder(), digits, 0);
+        return result;
+    }
+
+    private void backtrack(List<String> result, StringBuilder combination, String digits, int index) {
+        if (index == digits.length()) {
+            result.add(combination.toString());
+            return;
+        }
+
+        String letters = phoneMap.get(digits.charAt(index));
+        for (char c : letters.toCharArray()) {
+            combination.append(c);
+            backtrack(result, combination, digits, index + 1);
+            combination.deleteCharAt(combination.length() - 1); // 回溯
+        }
+    }
+}
+
+/*
+解題思路：
+1. 數字 2–9 對應到電話按鍵上的字母。
+2. 題目要求輸入一個數字字串，輸出所有可能的字母組合。
+3. 解法採用「回溯法」：
+   - 遞迴函式 backtrack 維護目前組合。
+   - 若 index 到達 digits 長度，則將組合加入結果。
+   - 否則取出當前數字對應的所有字母，一個一個嘗試。
+4. 若輸入為空字串，直接回傳空列表。
+5. 時間複雜度 O(3^n * 4^m)，其中 n 為對應到 3 個字母的數字數量，m 為對應到 4 個字母的數字數量；空間複雜度 O(n)（遞迴深度）。
+*/   
